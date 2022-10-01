@@ -2,7 +2,7 @@
 - 👀 I’m interested in python
 - 🌱 I’m currently learning Data Science/Analytics
 - 💞️ I’m looking to collaborate on ...
-- 📫 How to reach me ...
+- 📫 How to reach me ... miloboy188@gmail.com
 
 <!---
 mahjiid/mahjiid is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
