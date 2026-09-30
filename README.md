@@ -1,30 +1,66 @@
 # Road Anomaly Detection System
 
-Computer vision project for detecting road-surface anomalies using a custom YOLOv3 object-detection workflow.
+Computer vision project for detecting road-surface anomalies using a custom annotation and object-detection workflow.
 
 ## Project Overview
 
-This project was developed as part of my Computer Engineering work on road anomaly detection. The workflow combines dataset preparation, image annotation, YOLO-based model training, evaluation, and deployment-oriented experimentation for road-scene monitoring.
+This project was developed as part of my Computer Engineering work on road anomaly detection. It combines road-image dataset preparation, manual object annotation, model training, evaluation, and deployment-oriented experimentation.
 
-The repository currently contains the original Google Colab notebooks used to configure and train the model with the Darknet YOLOv3 framework.
+The original dataset was managed and annotated in **Edge Impulse**, while the repository also contains the original Google Colab notebooks used to configure and train a **YOLOv3 / Darknet** object-detection workflow.
+
+## Verified Edge Impulse Dataset
+
+The original Edge Impulse export for **Pothole and Bumps** contains:
+
+| Dataset detail | Verified value |
+| --- | ---: |
+| Total exported images | 711 |
+| Training images | 575 |
+| Testing images | 136 |
+| Images with bounding boxes | 711 |
+| Total bounding boxes | 795 |
+| Pothole boxes | 337 |
+| Bumps boxes | 456 |
+| Person boxes | 1 |
+| Car boxes | 1 |
+| Maximum boxes in one image | 4 |
+
+The exported metadata is stored in Edge Impulse's `info.labels` format and contains per-image bounding-box coordinates and class labels.
+
+> Note: the Edge Impulse generated block-output view showed 572 training windows and 133 testing windows for the configured impulse. The raw project export contains 575 training files and 136 testing files; these represent different stages of the Edge Impulse pipeline.
 
 ## What This Project Demonstrates
 
 - Computer vision dataset preparation
-- Object-detection training workflow
-- Ground-truth annotation for road-scene imagery
-- Bounding-box based labeling for supervised learning
-- YOLOv3 / Darknet model training
+- Manual bounding-box annotation
+- Ground-truth label creation
+- Multi-object annotation in road imagery
+- Annotation class consistency
+- Training/test dataset management
+- Object-detection model training
+- Edge Impulse workflow experience
+- YOLOv3 / Darknet training
 - Google Colab GPU training
 - OpenCV-enabled Darknet build
 - CUDA and cuDNN acceleration
-- Model-training configuration and experimentation
-- Understanding of the relationship between annotation quality and detection performance
+- Understanding of how annotation quality affects model performance
 
-## Training Stack
+## Annotation Classes
+
+The exported dataset primarily targets two road-anomaly classes:
+
+- **Pothole**
+- **Bumps**
+
+The export also contains isolated annotations for `person` and `car`, which are retained in the source metadata and should be reviewed as part of dataset QA.
+
+## Training & Annotation Stack
 
 | Area | Tools / Technologies |
 | --- | --- |
+| Annotation / Dataset Management | Edge Impulse |
+| Annotation Type | Bounding boxes |
+| Main Classes | Pothole, Bumps |
 | Object Detection | YOLOv3 |
 | Framework | Darknet |
 | Notebook Environment | Google Colab |
@@ -51,52 +87,56 @@ Main model-training notebook. It includes:
 
 Supporting environment and project setup notebook.
 
-## Annotation Experience
+## Annotation Workflow
 
-The road-anomaly dataset used for this project required labeled image data suitable for supervised object detection.
+The original Edge Impulse workflow involved:
 
-This work provides practical experience relevant to AI data annotation roles, including:
+1. Collecting and importing road-scene images
+2. Separating data into training and testing categories
+3. Identifying road anomalies in each image
+4. Drawing object-detection bounding boxes
+5. Assigning class labels such as `Pothole` and `Bumps`
+6. Reviewing images containing multiple anomalies
+7. Exporting labeled data for model development
+8. Using labeled data in object-detection training and testing
 
-- identifying target objects/anomalies in images
-- creating ground-truth labels
-- bounding-box annotation
-- maintaining consistent class definitions
-- preparing labels for YOLO training
-- reviewing training data for labeling errors
-- understanding how label quality affects false positives, false negatives, and model performance
+This demonstrates practical experience relevant to professional AI annotation work, including:
 
-> The original annotation platform, class definitions, sample annotations, and exported label examples will be added to this repository as the historical project materials are consolidated.
+- image annotation
+- bounding-box placement
+- object/class identification
+- dataset QA
+- label consistency
+- train/test dataset preparation
+- annotation metadata handling
+- understanding false positives and false negatives
+- connecting annotation quality to downstream model behavior
+
+## Edge Impulse Model Artifacts
+
+The Edge Impulse project produced downloadable object-detection artifacts including:
+
+- TensorFlow Lite (float32)
+- TensorFlow Lite (int8 quantized)
+- TensorFlow SavedModel
+- Keras H5 model
+
+This makes the project an end-to-end embedded/computer-vision workflow rather than annotation-only work.
 
 ## Computer Vision Annotation Portfolio Relevance
 
-This project supports work in:
+This project provides evidence for roles involving:
 
 - Computer Vision Data Annotation
 - Image Annotation
-- Video Annotation
-- Object Detection
+- Object Detection Annotation
 - Dataset Quality Assurance
 - AI Data Training
 - Annotation Review
 - Human-in-the-loop AI workflows
+- Embedded AI dataset preparation
 
-## Planned Documentation Improvements
-
-The repository is being expanded into a complete project case study. Upcoming additions include:
-
-- [ ] Original annotation-tool documentation
-- [ ] Annotation screenshots
-- [ ] Dataset class list
-- [ ] Sample YOLO label files
-- [ ] Dataset structure
-- [ ] Train/validation split documentation
-- [ ] Example detections
-- [ ] Evaluation metrics
-- [ ] Model architecture/workflow diagram
-- [ ] Embedded-system deployment notes
-- [ ] Annotation QA guidelines
-
-## Current Portfolio Expansion
+## Portfolio Expansion
 
 I am extending this work into a dedicated computer-vision annotation portfolio covering:
 
@@ -117,4 +157,4 @@ GitHub: [@mahjiid](https://github.com/mahjiid)
 
 ---
 
-If you are reviewing this repository for an AI-data or computer-vision role, the project demonstrates experience beyond basic labeling: the annotated data was used as part of an end-to-end object-detection training workflow.
+If you are reviewing this repository for an AI-data or computer-vision role, this project demonstrates experience beyond basic labeling: annotated data was used as part of an end-to-end computer-vision model training workflow.
