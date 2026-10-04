@@ -1,0 +1,5 @@
+clip_id,start_time,end_time,actor,action,object,interaction,end_state,instruction_alignment,confidence,reviewer_note
+practice_001,00:00.000,00:01.300,robot_arm,approach,red_block,none,gripper positioned near block,partial,high,"Practice example; action begins with directed motion toward target"
+practice_001,00:01.300,00:02.050,robot_arm,grasp,red_block,gripper-contact,block secured in gripper,partial,high,"Boundary ends when grasp is visibly stable"
+practice_001,00:02.050,00:04.400,robot_arm,move,red_block,carried-by-gripper,block positioned above tray,partial,high,"Transport separated from grasp and placement"
+practice_001,00:04.400,00:05.250,robot_arm,place,red_block,block-tray,block released inside tray,complete,high,"End state matches instruction: object placed in tray"
