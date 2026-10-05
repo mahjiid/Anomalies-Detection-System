@@ -133,6 +133,16 @@ The Edge Impulse project produced downloadable object-detection artifacts includ
 
 This makes the project an end-to-end embedded/computer-vision workflow rather than annotation-only work.
 
+## LabelImg → Label Studio utility
+
+I added a small, validated migration utility for converting **LabelImg Pascal VOC XML** bounding boxes into Label Studio JSON tasks.
+
+- [Converter](tools/labelimg_voc_to_labelstudio.py)
+- [Workflow documentation](docs/labelimg_to_labelstudio.md)
+- [Sample LabelImg XML](samples/labelimg_example.xml)
+
+This reflects hands-on LabelImg experience and demonstrates annotation-format conversion, bounding-box validation, and dataset migration.
+
 ## Computer Vision Annotation Portfolio Relevance
 
 This project provides evidence for roles involving:
