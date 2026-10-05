@@ -58,6 +58,11 @@ My QA process is documented in `docs/annotation_qa_checklist.md`. It focuses on 
 
 I also work in semiconductor manufacturing/process engineering, where precision, inspection, defect identification, process compliance, and repeatable QA decisions are part of day-to-day work. This gives me a strong foundation for robotics and human-activity evaluation tasks.
 
+## Annotation tools used
+
+- **LabelImg** — bounding-box image annotation
+- **Edge Impulse** — dataset management and object-detection labeling
+
 ## Tools and technologies
 
 Edge Impulse · YOLOv3 · Darknet · OpenCV · Python · Jupyter · Computer Vision · Bounding Boxes · Dataset QA · AI Training Data
