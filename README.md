@@ -8,6 +8,16 @@ This project was developed as part of my Computer Engineering work on road anoma
 
 The original dataset was managed and annotated in **Edge Impulse**, while the repository also contains the original Google Colab notebooks used to configure and train a **YOLOv3 / Darknet** object-detection workflow.
 
+
+## Annotation Portfolio
+
+For recruiter-facing evidence of annotation methodology and QA, see:
+
+- [Annotation Portfolio](ANNOTATION_PORTFOLIO.md)
+- [Video Annotation Method](docs/video_annotation_method.md)
+- [Annotation QA Checklist](docs/annotation_qa_checklist.md)
+- [Practice Video Action Annotation Sample](samples/video_action_annotation_practice.csv)
+
 ## Verified Edge Impulse Dataset
 
 The original Edge Impulse export for **Pothole and Bumps** contains:
