@@ -1,0 +1,18 @@
+<annotation>
+  <folder>images</folder>
+  <filename>road_001.jpg</filename>
+  <size>
+    <width>640</width>
+    <height>480</height>
+    <depth>3</depth>
+  </size>
+  <object>
+    <name>pothole</name>
+    <bndbox>
+      <xmin>64</xmin>
+      <ymin>96</ymin>
+      <xmax>320</xmax>
+      <ymax>240</ymax>
+    </bndbox>
+  </object>
+</annotation>
