@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -44,8 +45,8 @@ def voc_xml_to_label_studio_task(
 
     width = _parse_float(size, "width")
     height = _parse_float(size, "height")
-    if width <= 0 or height <= 0:
-        raise ValueError("Image width and height must be positive")
+    if not (math.isfinite(width) and math.isfinite(height)) or width <= 0 or height <= 0:
+        raise ValueError("Image width and height must be finite and positive")
 
     results = []
     for index, obj in enumerate(root.findall("object")):
@@ -59,7 +60,9 @@ def voc_xml_to_label_studio_task(
         xmax = _parse_float(box, "xmax")
         ymax = _parse_float(box, "ymax")
 
-        if not (0 <= xmin < xmax <= width and 0 <= ymin < ymax <= height):
+        if not all(math.isfinite(value) for value in (xmin, ymin, xmax, ymax)) or not (
+            0 <= xmin < xmax <= width and 0 <= ymin < ymax <= height
+        ):
             raise ValueError(
                 f"Object #{index + 1} has an invalid bounding box "
                 f"({xmin}, {ymin}, {xmax}, {ymax}) for image {width}x{height}"
