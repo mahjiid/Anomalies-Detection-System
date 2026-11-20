@@ -54,9 +54,15 @@ def validate(path):
                 timelines[clip].append((start, end, line))
     for clip, intervals in timelines.items():
         intervals.sort()
-        for previous, current in zip(intervals, intervals[1:]):
-            if current[0] < previous[1]:
-                errors.append(f"clip {clip}: overlapping intervals on lines {previous[2]} and {current[2]}")
+        # Track the interval with the furthest end: adjacent-only checks
+        # miss overlaps when a long segment contains multiple shorter ones.
+        latest_end = None
+        latest_line = None
+        for start, end, line in intervals:
+            if latest_end is not None and start < latest_end:
+                errors.append(f"clip {clip}: overlapping intervals on lines {latest_line} and {line}")
+            if latest_end is None or end > latest_end:
+                latest_end, latest_line = end, line
     return errors
 
 
