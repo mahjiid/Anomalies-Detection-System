@@ -34,6 +34,17 @@ class TimelineValidationTests(unittest.TestCase):
             self.row(start="00:00.000", end="00:02.000")])
         self.assertTrue(any("overlapping" in error for error in errors))
 
+
+    def test_nested_intervals_detected(self):
+        # The first segment contains both later segments. A check comparing
+        # only consecutive intervals would miss the first-versus-third overlap.
+        errors = self.check_rows([
+            self.row(start="00:00.000", end="00:10.000"),
+            self.row(start="00:01.000", end="00:02.000"),
+            self.row(start="00:03.000", end="00:04.000"),
+        ])
+        self.assertTrue(any("lines 2 and 4" in error for error in errors), errors)
+
     def test_different_clips_can_overlap(self):
         self.assertEqual([], self.check_rows([self.row(), self.row(clip="clip2")]))
 
