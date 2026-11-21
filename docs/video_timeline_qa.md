@@ -7,7 +7,7 @@ python -m unittest discover -s tests -p 'test_video_action_timeline.py' -v
 python tools/validate_video_action_timeline.py samples/video_action_annotation_practice.csv
 ```
 
-The validator checks required columns, essential nonempty fields, valid timestamps,
+The validator rejects duplicate column names and checks required columns, essential nonempty fields, valid timestamps,
 positive segment duration, and overlapping intervals **within the same clip**.
 Adjacent segments and overlapping timestamps across different clips are allowed.
 CSV rows may be unsorted. Errors include source line numbers.

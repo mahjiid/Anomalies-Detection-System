@@ -59,6 +59,12 @@ class TimelineValidationTests(unittest.TestCase):
     def test_hours_format(self):
         self.assertEqual(3601.25, seconds("01:00:01.250"))
 
+    def test_duplicate_column_headers_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "duplicate.csv"
+            path.write_text(",".join(REQUIRED + ("clip_id",)) + "\n")
+            self.assertTrue(any("duplicate columns: clip_id" in e for e in validate(path)))
+
     def test_missing_required_column(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "bad.csv"

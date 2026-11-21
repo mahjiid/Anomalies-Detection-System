@@ -31,6 +31,14 @@ def validate(path):
     with open(path, newline="", encoding="utf-8-sig") as stream:
         reader = csv.DictReader(stream)
         headers = reader.fieldnames or []
+        seen = set()
+        duplicates = set()
+        for name in headers:
+            if name in seen:
+                duplicates.add(name)
+            seen.add(name)
+        if duplicates:
+            return ["duplicate columns: " + ", ".join(sorted(duplicates))]
         missing = [name for name in REQUIRED if name not in headers]
         if missing:
             return ["missing columns: " + ", ".join(missing)]
