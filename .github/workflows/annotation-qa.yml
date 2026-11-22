@@ -34,7 +34,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run repository unit tests
-        run: python -m unittest discover -v
+        run: python -m unittest discover -s tests -v
 
       - name: Validate practice video-action annotations
         run: python tools/validate_video_action_timeline.py samples/video_action_annotation_practice.csv
