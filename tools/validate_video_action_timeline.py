@@ -42,7 +42,10 @@ def validate(path):
         missing = [name for name in REQUIRED if name not in headers]
         if missing:
             return ["missing columns: " + ", ".join(missing)]
-        for line, row in enumerate(reader, start=2):
+        for row in reader:
+            # DictReader.line_num counts physical CSV lines, including lines
+            # embedded in quoted fields; record enumeration does not.
+            line = reader.line_num
             if None in row:
                 errors.append(f"line {line}: extra CSV fields")
                 continue
