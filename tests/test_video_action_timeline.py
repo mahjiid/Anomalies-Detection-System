@@ -34,7 +34,6 @@ class TimelineValidationTests(unittest.TestCase):
             self.row(start="00:00.000", end="00:02.000")])
         self.assertTrue(any("overlapping" in error for error in errors))
 
-
     def test_nested_intervals_detected(self):
         # The first segment contains both later segments. A check comparing
         # only consecutive intervals would miss the first-versus-third overlap.
@@ -70,6 +69,18 @@ class TimelineValidationTests(unittest.TestCase):
             path = Path(directory) / "bad.csv"
             path.write_text("clip_id,start_time\nclip,00:00.000\n")
             self.assertTrue(any("missing columns" in e for e in validate(path)))
+
+    def test_error_line_uses_physical_line_after_multiline_field(self):
+        first = self.row()
+        first["reviewer_note"] = "first line\nsecond line"
+        second = self.row(start="00:01.000", end="00:02.000")
+        second["actor"] = ""
+
+        errors = self.check_rows([first, second])
+
+        # Header is line 1; the first record spans lines 2-3; the second
+        # record therefore starts and ends on physical line 4.
+        self.assertIn("line 4: empty actor", errors)
 
 
 if __name__ == "__main__":
