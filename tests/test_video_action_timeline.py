@@ -82,6 +82,39 @@ class TimelineValidationTests(unittest.TestCase):
         # record therefore starts and ends on physical line 4.
         self.assertIn("line 4: empty actor", errors)
 
+    def test_unterminated_quoted_field_is_rejected_with_physical_line(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "malformed.csv"
+            with path.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.writer(stream)
+                writer.writerow(REQUIRED)
+                first = self.row()
+                first["reviewer_note"] = "first line\nsecond line"
+                writer.writerow([first[name] for name in REQUIRED])
+                stream.write(
+                    'clip2,00:01.000,00:02.000,robot,move,block,none,moved,'
+                    'complete,high,"unfinished\n'
+                )
+
+            errors = validate(path)
+
+            self.assertTrue(
+                any("line 4: malformed CSV:" in error for error in errors),
+                errors,
+            )
+
+    def test_malformed_header_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "malformed-header.csv"
+            path.write_text('"clip_id,start_time\n', encoding="utf-8")
+
+            errors = validate(path)
+
+            self.assertTrue(
+                any("line 1: malformed CSV:" in error for error in errors),
+                errors,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
