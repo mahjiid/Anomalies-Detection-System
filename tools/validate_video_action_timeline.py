@@ -29,8 +29,11 @@ def validate(path):
     errors = []
     timelines = defaultdict(list)
     with open(path, newline="", encoding="utf-8-sig") as stream:
-        reader = csv.DictReader(stream)
-        headers = reader.fieldnames or []
+        reader = csv.DictReader(stream, strict=True)
+        try:
+            headers = reader.fieldnames or []
+        except csv.Error as exc:
+            return [f"line {reader.reader.line_num}: malformed CSV: {exc}"]
         seen = set()
         duplicates = set()
         for name in headers:
@@ -42,27 +45,32 @@ def validate(path):
         missing = [name for name in REQUIRED if name not in headers]
         if missing:
             return ["missing columns: " + ", ".join(missing)]
-        for row in reader:
-            # DictReader.line_num counts physical CSV lines, including lines
-            # embedded in quoted fields; record enumeration does not.
-            line = reader.line_num
-            if None in row:
-                errors.append(f"line {line}: extra CSV fields")
-                continue
-            for name in ("clip_id", "start_time", "end_time", "actor", "action"):
-                if not (row[name] or "").strip():
-                    errors.append(f"line {line}: empty {name}")
-            try:
-                start = seconds(row["start_time"] or "")
-                end = seconds(row["end_time"] or "")
-            except ValueError as exc:
-                errors.append(f"line {line}: invalid timestamp: {exc}")
-                continue
-            if end <= start:
-                errors.append(f"line {line}: end_time must exceed start_time")
-            clip = (row["clip_id"] or "").strip()
-            if clip:
-                timelines[clip].append((start, end, line))
+        try:
+            for row in reader:
+                # DictReader.line_num counts physical CSV lines, including lines
+                # embedded in quoted fields; record enumeration does not.
+                line = reader.line_num
+                if None in row:
+                    errors.append(f"line {line}: extra CSV fields")
+                    continue
+                for name in ("clip_id", "start_time", "end_time", "actor", "action"):
+                    if not (row[name] or "").strip():
+                        errors.append(f"line {line}: empty {name}")
+                try:
+                    start = seconds(row["start_time"] or "")
+                    end = seconds(row["end_time"] or "")
+                except ValueError as exc:
+                    errors.append(f"line {line}: invalid timestamp: {exc}")
+                    continue
+                if end <= start:
+                    errors.append(f"line {line}: end_time must exceed start_time")
+                clip = (row["clip_id"] or "").strip()
+                if clip:
+                    timelines[clip].append((start, end, line))
+        except csv.Error as exc:
+            # DictReader.line_num updates only after a successful record. The
+            # underlying csv.reader tracks physical lines consumed on parse errors.
+            errors.append(f"line {reader.reader.line_num}: malformed CSV: {exc}")
     for clip, intervals in timelines.items():
         intervals.sort()
         # Track the interval with the furthest end: adjacent-only checks
