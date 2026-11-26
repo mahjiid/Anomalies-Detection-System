@@ -10,7 +10,9 @@ python tools/validate_video_action_timeline.py samples/video_action_annotation_p
 The validator rejects duplicate column names and checks required columns, essential nonempty fields, valid timestamps,
 positive segment duration, and overlapping intervals **within the same clip**.
 Adjacent segments and overlapping timestamps across different clips are allowed.
-CSV rows may be unsorted. Errors include source line numbers.
+CSV rows may be unsorted. Errors include source line numbers. Malformed quoting is rejected
+instead of being silently accepted; parse errors report the physical source line, including
+multiline quoted records.
 
 **Limitations:** This is metadata-only QA. It cannot establish whether an action
 label, actor, temporal boundary, or instruction alignment is correct from the video.
