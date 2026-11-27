@@ -59,20 +59,20 @@ class TimelineValidationTests(unittest.TestCase):
         self.assertEqual(3601.25, seconds("01:00:01.250"))
 
     def test_duplicate_column_headers_rejected(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "duplicate.csv"
-            path.write_text(",".join(REQUIRED + ("clip_id",)) + "\\n")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "duplicate.csv"
+            path.write_text(",".join(REQUIRED + ("clip_id",)) + "\n")
             self.assertTrue(any("duplicate columns: clip_id" in e for e in validate(path)))
 
     def test_missing_required_column(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "bad.csv"
-            path.write_text("clip_id,start_time\\nclip,00:00.000\\n")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "bad.csv"
+            path.write_text("clip_id,start_time\nclip,00:00.000\n")
             self.assertTrue(any("missing columns" in e for e in validate(path)))
 
     def test_error_line_uses_physical_line_after_multiline_field(self):
         first = self.row()
-        first["reviewer_note"] = "first line\\nsecond line"
+        first["reviewer_note"] = "first line\nsecond line"
         second = self.row(start="00:01.000", end="00:02.000")
         second["actor"] = ""
 
@@ -83,17 +83,17 @@ class TimelineValidationTests(unittest.TestCase):
         self.assertIn("line 4: empty actor", errors)
 
     def test_unterminated_quoted_field_is_rejected_with_physical_line(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "malformed.csv"
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "malformed.csv"
             with path.open("w", newline="", encoding="utf-8") as stream:
                 writer = csv.writer(stream)
                 writer.writerow(REQUIRED)
                 first = self.row()
-                first["reviewer_note"] = "first line\\nsecond line"
+                first["reviewer_note"] = "first line\nsecond line"
                 writer.writerow([first[name] for name in REQUIRED])
                 stream.write(
                     'clip2,00:01.000,00:02.000,robot,move,block,none,moved,'
-                    'complete,high,"unfinished\\n'
+                    'complete,high,"unfinished\n'
                 )
 
             errors = validate(path)
@@ -104,9 +104,9 @@ class TimelineValidationTests(unittest.TestCase):
             )
 
     def test_malformed_header_is_reported(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "malformed-header.csv"
-            path.write_text('"clip_id,start_time\\n', encoding="utf-8")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "malformed-header.csv"
+            path.write_text('"clip_id,start_time\n', encoding="utf-8")
 
             errors = validate(path)
 
@@ -116,11 +116,11 @@ class TimelineValidationTests(unittest.TestCase):
             )
 
     def test_short_record_rejects_omitted_trailing_cells(self):
-        with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / "short-row.csv"
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "short-row.csv"
             path.write_text(
-                ",".join(REQUIRED) + "\\n"
-                "clip1,00:00.000,00:01.000,robot,grasp,block,contact,held,aligned\\n",
+                ",".join(REQUIRED) + "\n"
+                "clip1,00:00.000,00:01.000,robot,grasp,block,contact,held,aligned\n",
                 encoding="utf-8",
             )
 
