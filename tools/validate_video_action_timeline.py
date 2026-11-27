@@ -1,17 +1,16 @@
-"Validate timestamp and schema integrity of practice video-action CSV annotations.
+"""Validate timestamp and schema integrity of practice video-action CSV annotations.
 
 This checks metadata consistency, not whether labels match video content.
 """
 import argparse
 import csv
-import math
 import re
 from collections import defaultdict
 from pathlib import Path
 
 REQUIRED = ("clip_id", "start_time", "end_time", "actor", "action", "object",
             "interaction", "end_state", "instruction_alignment", "confidence", "reviewer_note")
-TIME = re.compile(r"^(?:(\\d+):)?(\\d{2}):(\\d{2})\\.(\\d{3})$")
+TIME = re.compile(r"^(?:(\d+):)?(\d{2}):(\d{2})\.(\d{3})$")
 
 
 def seconds(value):
