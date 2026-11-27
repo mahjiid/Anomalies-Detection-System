@@ -1,4 +1,4 @@
-"""Validate timestamp and schema integrity of practice video-action CSV annotations.
+"Validate timestamp and schema integrity of practice video-action CSV annotations.
 
 This checks metadata consistency, not whether labels match video content.
 """
@@ -11,7 +11,7 @@ from pathlib import Path
 
 REQUIRED = ("clip_id", "start_time", "end_time", "actor", "action", "object",
             "interaction", "end_state", "instruction_alignment", "confidence", "reviewer_note")
-TIME = re.compile(r"^(?:(\d+):)?(\d{2}):(\d{2})\.(\d{3})$")
+TIME = re.compile(r"^(?:(\\d+):)?(\\d{2}):(\\d{2})\\.(\\d{3})$")
 
 
 def seconds(value):
@@ -52,6 +52,15 @@ def validate(path):
                 line = reader.line_num
                 if None in row:
                     errors.append(f"line {line}: extra CSV fields")
+                    continue
+                # DictReader assigns None to trailing columns omitted from a
+                # short row. Explicit empty cells remain empty strings and are
+                # allowed for optional annotation fields.
+                missing_values = [name for name in headers if row[name] is None]
+                if missing_values:
+                    errors.append(
+                        f"line {line}: missing CSV values: {', '.join(missing_values)}"
+                    )
                     continue
                 for name in ("clip_id", "start_time", "end_time", "actor", "action"):
                     if not (row[name] or "").strip():
