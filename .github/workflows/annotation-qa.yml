@@ -7,7 +7,9 @@ on:
       - ".github/workflows/annotation-qa.yml"
       - "tests/**"
       - "tools/**"
+      - "docs/video_timeline_qa.md"
       - "samples/video_action_annotation_practice.csv"
+      - "samples/video_action_taxonomy.json"
   push:
     branches:
       - feat/video-action-timeline-qa-20261119
@@ -37,4 +39,4 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Validate practice video-action annotations
-        run: python tools/validate_video_action_timeline.py samples/video_action_annotation_practice.csv
+        run: python tools/validate_video_action_timeline.py samples/video_action_annotation_practice.csv --taxonomy samples/video_action_taxonomy.json
