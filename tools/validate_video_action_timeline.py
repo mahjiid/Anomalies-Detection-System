@@ -11,7 +11,9 @@ from pathlib import Path
 
 REQUIRED = ("clip_id", "start_time", "end_time", "actor", "action", "object",
             "interaction", "end_state", "instruction_alignment", "confidence", "reviewer_note")
-TAXONOMY_FIELDS = frozenset(("actor", "action", "interaction", "instruction_alignment", "confidence"))
+TAXONOMY_FIELDS = frozenset((
+    "actor", "action", "interaction", "instruction_alignment", "confidence"
+))
 TIME = re.compile(r"^(?:(\d+):)?(\d{2}):(\d{2})\.(\d{3})$")
 
 
@@ -79,10 +81,14 @@ def validate(path, taxonomy=None):
             return ["missing columns: " + ", ".join(missing)]
         try:
             for row in reader:
+                # DictReader.line_num counts physical CSV lines, including lines
+                # embedded in quoted fields; record enumeration does not.
                 line = reader.line_num
                 if None in row:
                     errors.append(f"line {line}: extra CSV fields")
                     continue
+                # DictReader assigns None to trailing columns omitted from a
+                # short row. Explicit empty cells remain empty strings and are allowed.
                 missing_values = [name for name in headers if row[name] is None]
                 if missing_values:
                     errors.append(
@@ -111,9 +117,12 @@ def validate(path, taxonomy=None):
                 if clip:
                     timelines[clip].append((start, end, line))
         except csv.Error as exc:
+            # The underlying csv.reader tracks physical lines consumed on parse errors.
             errors.append(f"line {reader.reader.line_num}: malformed CSV: {exc}")
     for clip, intervals in timelines.items():
         intervals.sort()
+        # Track the interval with the furthest end: adjacent-only checks
+        # miss overlaps when a long segment contains multiple shorter ones.
         latest_end = None
         latest_line = None
         for start, end, line in intervals:
