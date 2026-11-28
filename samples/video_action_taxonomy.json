@@ -1,0 +1,7 @@
+{
+  "actor": ["robot_arm"],
+  "action": ["approach", "grasp", "move", "place"],
+  "interaction": ["none", "gripper-contact", "carried-by-gripper", "block-tray"],
+  "instruction_alignment": ["partial", "complete"],
+  "confidence": ["high"]
+}
